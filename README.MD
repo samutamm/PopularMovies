@@ -3,10 +3,8 @@
 
 ### API key
 
-Application uses the API of https://www.themoviedb.org/. To run the app, the API key should be provided in json-file
-credentials.json in projects root folder. Like this:
+Application uses the API of https://www.themoviedb.org/. To run the app, the API key should be provided gradle.properties
+file in project root. Like this:
 ```
-{
-  "API_KEY": "..."
-}
-´´´
+apikey=asdhakhsdj21289eqwduh
+```
