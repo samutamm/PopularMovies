@@ -1,11 +1,11 @@
 package com.samutamm.nano.popularmovies;
 
 
+import android.test.AndroidTestCase;
 
-public class UtilityTest {
+public class UtilityTest extends AndroidTestCase{
 
-   // @org.junit.Test
-    public void testLoadJSONFromAsset() throws Exception {
-
+    public void testBuildConfig() {
+        assertNotNull(BuildConfig.MOVIE_DATABASE_API_KEY);
     }
 }
