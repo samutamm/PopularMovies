@@ -39,9 +39,12 @@ public class SearchActivity extends Activity implements AdapterView.OnItemSelect
     }
 
     private class FetchApi extends AsyncTask<String, String, String> {
+
+        private  HttpClient client = new HttpClient();
+
         @Override
         protected String doInBackground(String... strings) {
-            return null;
+            return client.fetchApi(strings[0]);
         }
     }
 }
