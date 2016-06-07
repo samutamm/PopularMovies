@@ -16,8 +16,6 @@
         android:id="@+id/spinner"
         android:layout_gravity="center_horizontal" />
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/movieList"></ListView>
+    <FrameLayout android:id="@+id/container"
+        android:layout_width="wrap_content" android:layout_height="wrap_content" />
 </LinearLayout>
