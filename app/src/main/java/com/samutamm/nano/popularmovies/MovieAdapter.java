@@ -45,9 +45,12 @@ public class MovieAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) convertView;
         }
-        String imageUrl = "http://image.tmdb.org/t/p/w92/" + movieList.get(position).getPoster_path();
+        String imageUrl = "http://image.tmdb.org/t/p/w92" + movieList.get(position).getPoster_path();
         Picasso.with(mContext)
                 .load(imageUrl)
+                .placeholder(R.drawable.placeholder)
+                .resize(100,100)
+                .centerCrop()
                 .into(imageView);
         return imageView;
     }

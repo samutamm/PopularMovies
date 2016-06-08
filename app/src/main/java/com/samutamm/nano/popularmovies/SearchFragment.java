@@ -53,7 +53,7 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        System.out.println("NOTHONG SELECTED");
+
     }
 
     private class FetchApi extends AsyncTask<String, String, Movie[]> {
