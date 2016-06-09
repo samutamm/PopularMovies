@@ -1,6 +1,7 @@
 package com.samutamm.nano.popularmovies;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -32,9 +33,18 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.search_fragment, container, false);
+        final View rootView = inflater.inflate(R.layout.search_fragment, container, false);
         GridView gridView = (GridView)rootView.findViewById(R.id.movieGrid);
         gridView.setAdapter(movieAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Movie movie = (Movie)view.getTag();
+                Intent movieIntent = new Intent(rootView.getContext(), MovieActivity.class);
+                movieIntent.putExtra(MovieActivity.MOVIE_TAG, movie);
+                startActivity(movieIntent);
+            }
+        });
         return rootView;
     }
 

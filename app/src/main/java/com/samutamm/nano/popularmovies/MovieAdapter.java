@@ -2,6 +2,7 @@ package com.samutamm.nano.popularmovies;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,6 @@ public class MovieAdapter extends BaseAdapter {
         return 0;
     }
 
-    // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
         if (convertView == null) {
@@ -45,12 +45,15 @@ public class MovieAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) convertView;
         }
-        String imageUrl = "http://image.tmdb.org/t/p/w92" + movieList.get(position).getPoster_path();
-        Picasso.with(mContext)
+        String size = "w185";
+        final Movie movie = movieList.get(position);
+        imageView.setTag(movie);
+        String imageUrl = "http://image.tmdb.org/t/p/" + size + movie.getPoster_path();
+        Picasso.with(mContext.getApplicationContext())
                 .load(imageUrl)
-                .placeholder(R.drawable.placeholder)
-                .resize(100,100)
+                .fit()
                 .centerCrop()
+                .placeholder(R.drawable.placeholder)
                 .into(imageView);
         return imageView;
     }

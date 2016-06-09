@@ -1,6 +1,8 @@
 package com.samutamm.nano.popularmovies.domain;
 
-public class Movie {
+import java.io.Serializable;
+
+public class Movie implements Serializable{
     private String poster_path;
     private String title;
 
