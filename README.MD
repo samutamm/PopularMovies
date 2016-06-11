@@ -8,3 +8,6 @@ file in project root. Like this:
 ```
 apikey=asdhakhsdj21289eqwduh
 ```
+
+### TODO
+In the MainActivity the movie posters are showed only partially. Picasso methods fit and centerCrop does not scale image to as wanted.
