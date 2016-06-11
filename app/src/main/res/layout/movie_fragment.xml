@@ -3,29 +3,47 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:paddingTop="10dp">
+    android:paddingTop="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp">
 
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="30dp"
         android:text="Deadpool"
-        android:id="@+id/title" />
+        android:id="@+id/original_title"
+        android:textStyle="bold"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Synopsis"
-        android:id="@+id/synopsis"
-        android:layout_gravity="center_horizontal" />
+    <LinearLayout
+        style="@style/Movie_row_linearlayout">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Vote average"
-        android:id="@+id/vote_average"
-        android:layout_gravity="center_horizontal" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:textSize="20dp"
+            android:text="Synopsis asldjasdjkhasjkdhaksdkhaksdhasjdhjkahsd ajhsdhaskjd sd asjldh s dasjhd as öoafjew  asfklahsf  fhas al asdh asl lhdlaksd  alksjd a aijdl kasd"
+            android:id="@+id/synopsis" />
+        <ImageView
+            android:layout_weight="0.5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_delete"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/thumbnail"/>
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/Movie_row_linearlayout">
+        <TextView
+            style="@style/Movie_average_text"
+            android:text="Vote average: " />
+        <TextView
+            style="@style/Movie_average_text"
+            android:text="8.76"
+            android:id="@+id/vote_average" />
+    </LinearLayout>
 </LinearLayout>

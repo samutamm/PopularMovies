@@ -9,8 +9,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.samutamm.nano.popularmovies.domain.Movie;
+import com.squareup.picasso.Picasso;
 
 public class MovieActivity extends AppCompatActivity {
 
@@ -36,9 +39,35 @@ public class MovieActivity extends AppCompatActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            final View rootView = inflater.inflate(R.layout.movie_fragment, container, false);
+            ViewHolder viewHolder = new ViewHolder(rootView);
+
             Movie movie = (Movie) getArguments().get(MOVIE_TAG);
-            System.out.println(movie.getTitle());
-            return super.onCreateView(inflater, container, savedInstanceState);
+            viewHolder.originalTitle.setText(movie.getOriginal_title());
+            viewHolder.synopsis.setText(movie.getOverview());
+            viewHolder.averageVote.setText(movie.getVote_average());
+
+            final String thumbnailUrl = Utility.getMovieUrl(movie, "w92");
+            Picasso.with(rootView.getContext())
+                    .load(thumbnailUrl)
+                    .resize(500, 800)
+                    .into(viewHolder.thumbnail);
+
+            return rootView;
+        }
+
+        public static class ViewHolder {
+            public TextView originalTitle;
+            public TextView synopsis;
+            public TextView averageVote;
+            public ImageView thumbnail;
+
+            public ViewHolder(View view) {
+                originalTitle = (TextView) view.findViewById(R.id.original_title);
+                synopsis = (TextView)view.findViewById(R.id.synopsis);
+                averageVote = (TextView)view.findViewById(R.id.vote_average);
+                thumbnail = (ImageView)view.findViewById(R.id.thumbnail);
+            }
         }
     }
 }

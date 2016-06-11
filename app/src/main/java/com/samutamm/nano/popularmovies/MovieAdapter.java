@@ -45,10 +45,10 @@ public class MovieAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) convertView;
         }
-        String size = "w185";
         final Movie movie = movieList.get(position);
+        String size = "w185";
         imageView.setTag(movie);
-        String imageUrl = "http://image.tmdb.org/t/p/" + size + movie.getPoster_path();
+        String imageUrl = Utility.getMovieUrl(movie, size);
         Picasso.with(mContext.getApplicationContext())
                 .load(imageUrl)
                 .fit()
