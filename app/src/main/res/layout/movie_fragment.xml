@@ -1,49 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:paddingTop="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingBottom="16dp">
-
-
-    <TextView
-        android:layout_width="wrap_content"
+<ScrollView android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="30dp"
-        android:text="Deadpool"
-        android:id="@+id/original_title"
-        android:textStyle="bold"/>
+        android:gravity="center_horizontal"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="16dp">
 
-    <LinearLayout
-        style="@style/Movie_row_linearlayout">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:textSize="20dp"
-            android:text="Synopsis asldjasdjkhasjkdhaksdkhaksdhasjdhjkahsd ajhsdhaskjd sd asjldh s dasjhd as öoafjew  asfklahsf  fhas al asdh asl lhdlaksd  alksjd a aijdl kasd"
-            android:id="@+id/synopsis" />
-        <ImageView
-            android:layout_weight="0.5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_delete"
-            android:layout_gravity="center_vertical"
-            android:id="@+id/thumbnail"/>
-    </LinearLayout>
+            android:textSize="30sp"
+            android:id="@+id/original_title"
+            android:textStyle="bold"/>
 
-    <LinearLayout
-        style="@style/Movie_row_linearlayout">
-        <TextView
-            style="@style/Movie_average_text"
-            android:text="Vote average: " />
-        <TextView
-            style="@style/Movie_average_text"
-            android:text="8.76"
-            android:id="@+id/vote_average" />
+        <LinearLayout
+            style="@style/Movie_row_linearlayout">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:textSize="20sp"
+                android:id="@+id/synopsis" />
+            <ImageView
+                android:layout_weight="0.5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/thumbnail"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/Movie_row_linearlayout">
+            <TextView
+                style="@style/Movie_average_text"
+                android:text="@string/vote_average" />
+            <TextView
+                style="@style/Movie_average_text"
+                android:id="@+id/vote_average" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/Movie_row_linearlayout">
+            <TextView
+                style="@style/Movie_average_text"
+                android:text="@string/release_date" />
+            <TextView
+                style="@style/Movie_average_text"
+                android:id="@+id/release_date" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

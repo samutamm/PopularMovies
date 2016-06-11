@@ -8,6 +8,7 @@ public class Movie implements Serializable{
     private String original_title;
     private String overview;
     private String vote_average;
+    private String release_date;
 
     public String getPoster_path() {
         return poster_path;
@@ -47,5 +48,13 @@ public class Movie implements Serializable{
 
     public void setVote_average(String vote_average) {
         this.vote_average = vote_average;
+    }
+
+    public String getRelease_date() {
+        return release_date;
+    }
+
+    public void setRelease_date(String release_date) {
+        this.release_date = release_date;
     }
 }

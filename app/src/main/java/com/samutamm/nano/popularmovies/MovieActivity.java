@@ -46,6 +46,7 @@ public class MovieActivity extends AppCompatActivity {
             viewHolder.originalTitle.setText(movie.getOriginal_title());
             viewHolder.synopsis.setText(movie.getOverview());
             viewHolder.averageVote.setText(movie.getVote_average());
+            viewHolder.releaseDate.setText(movie.getRelease_date());
 
             final String thumbnailUrl = Utility.getMovieUrl(movie, "w92");
             Picasso.with(rootView.getContext())
@@ -61,12 +62,14 @@ public class MovieActivity extends AppCompatActivity {
             public TextView synopsis;
             public TextView averageVote;
             public ImageView thumbnail;
+            public TextView releaseDate;
 
             public ViewHolder(View view) {
                 originalTitle = (TextView) view.findViewById(R.id.original_title);
                 synopsis = (TextView)view.findViewById(R.id.synopsis);
                 averageVote = (TextView)view.findViewById(R.id.vote_average);
                 thumbnail = (ImageView)view.findViewById(R.id.thumbnail);
+                releaseDate = (TextView)view.findViewById(R.id.release_date);
             }
         }
     }
