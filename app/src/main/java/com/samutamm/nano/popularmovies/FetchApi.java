@@ -2,6 +2,7 @@ package com.samutamm.nano.popularmovies;
 
 import android.content.Context;
 import android.net.Uri;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,11 +20,14 @@ public class FetchApi{
 
     private RequestQueue queue;
     private Parser parser;
+    private Context mContext;
+
 
     public FetchApi(Context context, OnFetchCompleted listener) {
         mListener = listener;
         queue = Volley.newRequestQueue(context);
         parser = new Parser();
+        mContext = context;
     }
 
     public void fetch(String criteria) {
@@ -39,6 +43,11 @@ public class FetchApi{
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                Toast.makeText(
+                        mContext,
+                        "Please check your internet connection! Cannot load the movies.",
+                        Toast.LENGTH_LONG
+                ).show();
             }
         });
         queue.add(stringRequest);
