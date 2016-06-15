@@ -6,6 +6,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
@@ -42,6 +43,13 @@ public class MovieAdapter extends BaseAdapter {
         ImageView imageView;
         if (convertView == null) {
             imageView = new ImageView(mContext);
+            imageView.setLayoutParams(
+                    new AbsListView.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+            );
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            imageView.setAdjustViewBounds(true);
         } else {
             imageView = (ImageView) convertView;
         }
@@ -51,8 +59,6 @@ public class MovieAdapter extends BaseAdapter {
         String imageUrl = Utility.getMovieUrl(movie, size);
         Picasso.with(mContext.getApplicationContext())
                 .load(imageUrl)
-                .fit()
-                .centerCrop()
                 .placeholder(R.drawable.placeholder)
                 .into(imageView);
         return imageView;

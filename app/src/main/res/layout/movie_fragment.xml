@@ -13,47 +13,47 @@
 
 
         <TextView
+            android:id="@+id/original_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="30sp"
-            android:id="@+id/original_title"
             android:textStyle="bold"/>
 
         <LinearLayout
             style="@style/Movie_row_linearlayout">
 
             <TextView
+                android:id="@+id/synopsis"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:textSize="20sp"
-                android:id="@+id/synopsis" />
+                android:textSize="20sp" />
             <ImageView
+                android:id="@+id/thumbnail"
                 android:layout_weight="0.5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:id="@+id/thumbnail"/>
+                android:layout_gravity="center_vertical" />
         </LinearLayout>
 
         <LinearLayout
             style="@style/Movie_row_linearlayout">
             <TextView
-                style="@style/Movie_average_text"
-                android:text="@string/vote_average" />
+                android:text="@string/vote_average"
+                style="@style/Movie_average_text" />
             <TextView
-                style="@style/Movie_average_text"
-                android:id="@+id/vote_average" />
+                android:id="@+id/vote_average"
+                style="@style/Movie_average_text" />
         </LinearLayout>
 
         <LinearLayout
             style="@style/Movie_row_linearlayout">
             <TextView
-                style="@style/Movie_average_text"
-                android:text="@string/release_date" />
+                android:text="@string/release_date"
+                style="@style/Movie_average_text" />
             <TextView
-                style="@style/Movie_average_text"
-                android:id="@+id/release_date" />
+                android:id="@+id/release_date"
+                style="@style/Movie_average_text" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
