@@ -1,4 +1,4 @@
-package com.samutamm.nano.popularmovies;
+package com.samutamm.nano.popularmovies.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.jakewharton.rxbinding.view.RxView;
+import com.samutamm.nano.popularmovies.R;
+import com.samutamm.nano.popularmovies.Utility;
+import com.samutamm.nano.popularmovies.activities.MovieActivity;
 import com.samutamm.nano.popularmovies.domain.Movie;
 import com.squareup.picasso.Picasso;
 

@@ -1,12 +1,12 @@
-package com.samutamm.nano.popularmovies;
+package com.samutamm.nano.popularmovies.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Spinner;
 
-import com.squareup.picasso.Picasso;
+import com.samutamm.nano.popularmovies.R;
+import com.samutamm.nano.popularmovies.fragments.SearchFragment;
 
 public class MainActivity extends AppCompatActivity {
 

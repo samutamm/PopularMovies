@@ -1,4 +1,4 @@
-package com.samutamm.nano.popularmovies;
+package com.samutamm.nano.popularmovies.activities;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.samutamm.nano.popularmovies.R;
+import com.samutamm.nano.popularmovies.Utility;
 import com.samutamm.nano.popularmovies.domain.Movie;
 import com.squareup.picasso.Picasso;
 

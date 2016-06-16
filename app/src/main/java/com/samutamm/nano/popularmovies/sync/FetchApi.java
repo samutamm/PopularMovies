@@ -1,4 +1,4 @@
-package com.samutamm.nano.popularmovies;
+package com.samutamm.nano.popularmovies.sync;
 
 import android.content.Context;
 import android.net.Uri;
@@ -10,6 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.samutamm.nano.popularmovies.BuildConfig;
 import com.samutamm.nano.popularmovies.domain.Movie;
 import com.samutamm.nano.popularmovies.sync.Parser;
 
