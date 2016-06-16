@@ -10,7 +10,8 @@ import android.widget.ImageView;
 
 import com.jakewharton.rxbinding.view.RxView;
 import com.samutamm.nano.popularmovies.R;
-import com.samutamm.nano.popularmovies.Utility;
+import com.samutamm.nano.popularmovies.helpers.MovieRowViewHolder;
+import com.samutamm.nano.popularmovies.helpers.Utility;
 import com.samutamm.nano.popularmovies.activities.MovieActivity;
 import com.samutamm.nano.popularmovies.domain.Movie;
 import com.squareup.picasso.Picasso;
@@ -19,19 +20,9 @@ import java.util.List;
 
 import rx.functions.Action1;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
+public class MovieAdapter extends RecyclerView.Adapter<MovieRowViewHolder> {
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView leftImage;
-        public ImageView rightImage;
-
-        public ViewHolder(View v) {
-            super(v);
-            leftImage = (ImageView) v.findViewById(R.id.left_image);
-            rightImage = (ImageView) v.findViewById(R.id.right_image);
-        }
-    }
     private Context mContext;
     private List<Movie> movieList;
 
@@ -41,13 +32,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MovieRowViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_row, parent, false);
-        return new ViewHolder(v);
+        return new MovieRowViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(MovieRowViewHolder holder, int position) {
         Movie leftMovie = movieList.get(position);
         Movie rightMovie = movieList.get(movieList.size() - position - 1);
 
