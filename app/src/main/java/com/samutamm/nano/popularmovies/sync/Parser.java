@@ -9,6 +9,7 @@ import com.samutamm.nano.popularmovies.domain.Movie;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Parser {
@@ -19,8 +20,14 @@ public class Parser {
     }
 
     public List<Movie> parseJson(String jsonString) {
-        final JsonObject json = gson.fromJson(jsonString, JsonObject.class);
-        final JsonElement results = json.get("results");
-        return gson.fromJson(results, new TypeToken<List<Movie>>(){}.getType());
+        if (jsonString != null) {
+            final JsonObject json = gson.fromJson(jsonString, JsonObject.class);
+            final String resultsKey = "results";
+            if (json != null && json.has(resultsKey)) {
+                final JsonElement results = json.get(resultsKey);
+                return gson.fromJson(results, new TypeToken<List<Movie>>(){}.getType());
+            }
+        }
+        return new ArrayList<>();
     }
 }

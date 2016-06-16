@@ -1,10 +1,8 @@
 package com.samutamm.nano.popularmovies;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +26,7 @@ public class MovieActivity extends AppCompatActivity {
 
         final MovieFragment movieFragment = new MovieFragment();
         Bundle args = new Bundle();
-        args.putSerializable(MOVIE_TAG,movie);
+        args.putParcelable(MOVIE_TAG,movie);
         movieFragment.setArguments(args);
         getFragmentManager().beginTransaction()
                 .replace(R.id.movie_container, movieFragment)
@@ -43,10 +41,10 @@ public class MovieActivity extends AppCompatActivity {
             ViewHolder viewHolder = new ViewHolder(rootView);
 
             Movie movie = (Movie) getArguments().get(MOVIE_TAG);
-            viewHolder.originalTitle.setText(movie.getOriginal_title());
+            viewHolder.originalTitle.setText(movie.getOriginalTitle());
             viewHolder.synopsis.setText(movie.getOverview());
-            viewHolder.averageVote.setText(movie.getVote_average());
-            viewHolder.releaseDate.setText(movie.getRelease_date());
+            viewHolder.averageVote.setText(movie.getVoteAverage());
+            viewHolder.releaseDate.setText(movie.getReleaseDate());
 
             final String thumbnailUrl = Utility.getMovieUrl(movie, "w92");
             Picasso.with(rootView.getContext())
