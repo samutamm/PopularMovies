@@ -3,11 +3,11 @@
     android:layout_height="match_parent"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/movieGrid"
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/movieRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:numColumns="2"
         android:stretchMode="columnWidth"/>
 
 </FrameLayout>
