@@ -11,49 +11,80 @@
         android:paddingRight="16dp"
         android:paddingBottom="16dp">
 
-
-        <TextView
-            android:id="@+id/original_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="30sp"
-            android:textStyle="bold"/>
-
         <LinearLayout
-            style="@style/Movie_row_linearlayout">
-
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:background="@color/movieFragmetDark">
             <TextView
-                android:id="@+id/synopsis"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:textSize="20sp" />
-            <ImageView
-                android:id="@+id/thumbnail"
-                android:layout_weight="0.5"
+                android:id="@+id/original_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical" />
+                android:text="Chappie"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical"
+                android:textColor="@android:color/white"
+                android:layout_marginLeft="16dp"/>
         </LinearLayout>
 
         <LinearLayout
             style="@style/Movie_row_linearlayout">
-            <TextView
-                android:text="@string/vote_average"
-                style="@style/Movie_average_text" />
-            <TextView
-                android:id="@+id/vote_average"
-                style="@style/Movie_average_text" />
+            <ImageView
+                android:id="@+id/thumbnail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/placeholder"
+                android:layout_gravity="center"
+                android:layout_weight="0.5"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="0.5">
+
+                <TextView
+                    android:id="@+id/movieYear"
+                    android:textSize="25sp"
+                    android:text="2015"
+                    style="@style/movie_detail"/>
+
+                <!-- This information is not present in json-->
+                <TextView
+                    android:id="@+id/movieLength"
+                    android:textSize="20sp"
+                    android:textStyle="italic"
+                    android:text="120min"
+                    style="@style/movie_detail"/>
+
+                <TextView
+                    android:id="@+id/averageVote"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:text="8/10"
+                    style="@style/movie_detail"/>
+
+                <Button
+                    android:id="@+id/markMovieAsFavorite"
+                    android:text="@string/favoriteButton"
+                    android:textSize="12sp"
+                    android:background="@color/movieFragmetLight"
+                    style="@style/movie_detail" />
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            style="@style/Movie_row_linearlayout">
-            <TextView
-                android:text="@string/release_date"
-                style="@style/Movie_average_text" />
-            <TextView
-                android:id="@+id/release_date"
-                style="@style/Movie_average_text" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/synopsis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_marginTop="16dp"
+            android:text="ladl aslkdj adkla akldjad pqwq pr casl pa  lr alfja sojdaspdoajd apd"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:contentDescription="@string/lineDescription"/>
+
     </LinearLayout>
 </ScrollView>

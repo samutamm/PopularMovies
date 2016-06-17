@@ -4,4 +4,6 @@
     <string name="criteria_rated">Highest rated</string>
     <string name="vote_average">Vote average:</string>
     <string name="release_date">Release date:</string>
+    <string name="lineDescription">This line marks the end of synopsis text.</string>
+    <string name="favoriteButton">Mark as \n favorite</string>
 </resources>

@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.samutamm.nano.popularmovies.R;
 import com.samutamm.nano.popularmovies.helpers.MovieViewHolder;
@@ -24,14 +22,13 @@ public class MovieFragment extends Fragment {
 
         Movie movie = (Movie) getArguments().get(MovieActivity.MOVIE_TAG);
         movieViewHolder.originalTitle.setText(movie.getOriginalTitle());
+        movieViewHolder.movieYear.setText(Utility.parseYear(movie.getReleaseDate()));
+        movieViewHolder.averageVote.setText(movie.getVoteAverage() + "/10.0");
         movieViewHolder.synopsis.setText(movie.getOverview());
-        movieViewHolder.averageVote.setText(movie.getVoteAverage());
-        movieViewHolder.releaseDate.setText(movie.getReleaseDate());
 
         final String thumbnailUrl = Utility.getMovieUrl(movie, "w92");
         Picasso.with(rootView.getContext())
                 .load(thumbnailUrl)
-                .resize(500, 800)
                 .into(movieViewHolder.thumbnail);
 
         return rootView;

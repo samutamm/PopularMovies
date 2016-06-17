@@ -1,6 +1,7 @@
 package com.samutamm.nano.popularmovies.helpers;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,13 +12,17 @@ public class MovieViewHolder {
     public TextView synopsis;
     public TextView averageVote;
     public ImageView thumbnail;
-    public TextView releaseDate;
+    public TextView movieYear;
+    public TextView movieLength;
+    public Button markFavoriteButton;
 
     public MovieViewHolder(View view) {
         originalTitle = (TextView) view.findViewById(R.id.original_title);
         synopsis = (TextView)view.findViewById(R.id.synopsis);
-        averageVote = (TextView)view.findViewById(R.id.vote_average);
+        averageVote = (TextView)view.findViewById(R.id.averageVote);
         thumbnail = (ImageView)view.findViewById(R.id.thumbnail);
-        releaseDate = (TextView)view.findViewById(R.id.release_date);
+        movieYear = (TextView)view.findViewById(R.id.movieYear);
+        movieLength = (TextView)view.findViewById(R.id.movieLength);
+        markFavoriteButton = (Button) view.findViewById(R.id.markMovieAsFavorite);
     }
 }

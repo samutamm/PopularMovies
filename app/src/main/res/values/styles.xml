@@ -8,20 +8,17 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="Movie_average_text">
-        <item name="android:textSize">25dp</item>
+    <style name="movie_detail">
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_weight">0.5</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginTop">5dp</item>
     </style>
 
     <style name="Movie_row_linearlayout">
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:weightSum">1</item>
     </style>
-
-
 </resources>
