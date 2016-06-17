@@ -23,7 +23,7 @@ public class MovieActivity extends AppCompatActivity {
         Bundle args = new Bundle();
         args.putParcelable(MOVIE_TAG,movie);
         movieFragment.setArguments(args);
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.movie_container, movieFragment)
                 .commit();
     }

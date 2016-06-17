@@ -1,7 +1,7 @@
 package com.samutamm.nano.popularmovies.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,17 +20,20 @@ public class MovieFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.movie_fragment, container, false);
         MovieViewHolder movieViewHolder = new MovieViewHolder(rootView);
 
-        Movie movie = (Movie) getArguments().get(MovieActivity.MOVIE_TAG);
-        movieViewHolder.originalTitle.setText(movie.getOriginalTitle());
-        movieViewHolder.movieYear.setText(Utility.parseYear(movie.getReleaseDate()));
-        movieViewHolder.averageVote.setText(movie.getVoteAverage() + "/10.0");
-        movieViewHolder.synopsis.setText(movie.getOverview());
+        final Bundle args = getArguments();
+        if (args != null) {
+            Movie movie = (Movie) args.get(MovieActivity.MOVIE_TAG);
+            movieViewHolder.originalTitle.setText(movie.getOriginalTitle());
+            movieViewHolder.movieYear.setText(Utility.parseYear(movie.getReleaseDate()));
+            movieViewHolder.averageVote.setText(movie.getVoteAverage() + "/10.0");
+            movieViewHolder.synopsis.setText(movie.getOverview());
 
-        final String thumbnailUrl = Utility.getMovieUrl(movie, "w92");
-        Picasso.with(rootView.getContext())
-                .load(thumbnailUrl)
-                .into(movieViewHolder.thumbnail);
+            final String thumbnailUrl = Utility.getMovieUrl(movie, "w92");
+            Picasso.with(rootView.getContext())
+                    .load(thumbnailUrl)
+                    .into(movieViewHolder.thumbnail);
 
+        }
         return rootView;
     }
 }
