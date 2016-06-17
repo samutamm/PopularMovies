@@ -1,5 +1,6 @@
 package com.samutamm.nano.popularmovies.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 
 import com.jakewharton.rxbinding.view.RxView;
 import com.samutamm.nano.popularmovies.R;
+import com.samutamm.nano.popularmovies.activities.MainActivity;
 import com.samutamm.nano.popularmovies.helpers.MovieRowViewHolder;
 import com.samutamm.nano.popularmovies.helpers.Utility;
 import com.samutamm.nano.popularmovies.activities.MovieActivity;
@@ -65,13 +67,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieRowViewHolder> {
     }
 
     private Action1<Void> startMovieActivity(final Movie movie) {
+        final OnImageClickCallback callback = (OnImageClickCallback) (OnImageClickCallback)mContext;
         return new Action1<Void>() {
             @Override
             public void call(Void aVoid) {
-                Intent movieIntent = new Intent(mContext, MovieActivity.class);
-                movieIntent.putExtra(MovieActivity.MOVIE_TAG, movie);
-                mContext.startActivity(movieIntent);
+               callback.onImageClick(movie);
             }
         };
+    }
+
+    public interface OnImageClickCallback {
+        void onImageClick(Movie movie);
     }
 }

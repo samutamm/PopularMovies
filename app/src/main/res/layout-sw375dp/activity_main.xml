@@ -25,15 +25,16 @@
             android:background="@android:color/holo_blue_bright"
             android:textAlignment="center"/>
 
-        <FrameLayout
-            android:id="@+id/container"
+        <fragment
+            android:id="@+id/search_fragment"
+            android:name="com.samutamm.nano.popularmovies.fragments.SearchFragment"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            tools:layout="@android:layout/list_content"/>
     </LinearLayout>
 
-    <fragment
+    <FrameLayout
         android:id="@+id/movie_detail_container"
-        android:name="com.samutamm.nano.popularmovies.fragments.MovieFragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="4"/>
