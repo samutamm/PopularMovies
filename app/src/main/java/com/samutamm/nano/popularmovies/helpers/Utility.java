@@ -2,8 +2,6 @@ package com.samutamm.nano.popularmovies.helpers;
 
 import com.samutamm.nano.popularmovies.domain.Movie;
 
-import java.util.Date;
-
 public class Utility {
 
     public static String getMovieUrl(Movie movie, String size) {
@@ -16,5 +14,19 @@ public class Utility {
             return split[0];
         }
         return "--";
+    }
+
+    public static int[] getMovieListIndexesForTablet(int position, int movieListSize) {
+        int[] indexes = new int[3];
+        int base = position * 3;
+        for (int j = 0; j < 3; j++) {
+            final boolean indexOutOfBound = (base + j) >= movieListSize;
+            if (indexOutOfBound) {
+                indexes[j] = -1;
+            } else {
+                indexes[j] = base + j;
+            }
+        }
+        return indexes;
     }
 }

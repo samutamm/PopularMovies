@@ -10,11 +10,13 @@ import com.samutamm.nano.popularmovies.R;
 public class MovieRowViewHolder extends RecyclerView.ViewHolder {
 
     public ImageView leftImage;
+    public ImageView middleImage;
     public ImageView rightImage;
 
     public MovieRowViewHolder(View v) {
         super(v);
         leftImage = (ImageView) v.findViewById(R.id.left_image);
+        middleImage = (ImageView) v.findViewById(R.id.middle_image);
         rightImage = (ImageView) v.findViewById(R.id.right_image);
     }
 }

@@ -1,8 +1,6 @@
 package com.samutamm.nano.popularmovies.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +9,8 @@ import android.widget.ImageView;
 
 import com.jakewharton.rxbinding.view.RxView;
 import com.samutamm.nano.popularmovies.R;
-import com.samutamm.nano.popularmovies.activities.MainActivity;
 import com.samutamm.nano.popularmovies.helpers.MovieRowViewHolder;
 import com.samutamm.nano.popularmovies.helpers.Utility;
-import com.samutamm.nano.popularmovies.activities.MovieActivity;
 import com.samutamm.nano.popularmovies.domain.Movie;
 import com.squareup.picasso.Picasso;
 
@@ -24,13 +20,14 @@ import rx.functions.Action1;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieRowViewHolder> {
 
-
     private Context mContext;
     private List<Movie> movieList;
+    private boolean tableteMode;
 
     public MovieAdapter(Context c, List<Movie> movies) {
         mContext = c;
         movieList = movies;
+        tableteMode = false;
     }
 
     @Override
@@ -41,6 +38,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieRowViewHolder> {
 
     @Override
     public void onBindViewHolder(MovieRowViewHolder holder, int position) {
+        if (tableteMode) {
+            handleBigScreen(holder, position);
+        } else {
+            handleSmallScreen(holder, position);
+        }
+    }
+
+    private void handleSmallScreen(MovieRowViewHolder holder, int position) {
         Movie leftMovie = movieList.get(position);
         Movie rightMovie = movieList.get(movieList.size() - position - 1);
 
@@ -48,13 +53,26 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieRowViewHolder> {
         addImageToView(rightMovie, holder.rightImage);
     }
 
+    private void handleBigScreen(MovieRowViewHolder holder, int position) {
+        int[] indexes = Utility.getMovieListIndexesForTablet(position, movieList.size());
+        ImageView[] images = new ImageView[]{holder.leftImage, holder.middleImage, holder.rightImage};
+        for(int i = 0; i < 3; i++) {
+            if (indexes[i] != -1) {
+                Movie movie = movieList.get(indexes[i]);
+                addImageToView(movie, images[i]);
+            }
+        }
+    }
+
     @Override
     public int getItemCount() {
+        if (tableteMode) {
+            return movieList.size() / 3; // Becouse we have 3 images on one 'item'
+        }
         return movieList.size() / 2; // Becouse we have 2 images on one 'item'
     }
 
-    public void addImageToView(final Movie movie, View convertView) {
-        ImageView imageView = (ImageView) convertView;
+    public void addImageToView(final Movie movie, ImageView imageView) {
         String size = "w185";
         imageView.setTag(movie);
         String imageUrl = Utility.getMovieUrl(movie, size);
@@ -74,6 +92,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieRowViewHolder> {
                callback.onImageClick(movie);
             }
         };
+    }
+
+    public void setTableteMode(boolean tableteMode) {
+        this.tableteMode = tableteMode;
     }
 
     public interface OnImageClickCallback {

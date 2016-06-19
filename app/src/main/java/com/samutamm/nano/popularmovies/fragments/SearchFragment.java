@@ -30,6 +30,10 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
         movieAdapter = new MovieAdapter(getActivity(), movieList);
     }
 
+    public void setTwoPaneModeToAdapter(boolean twoPane) {
+        movieAdapter.setTableteMode(twoPane);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.search_fragment, container, false);
