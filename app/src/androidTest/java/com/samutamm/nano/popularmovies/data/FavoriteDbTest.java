@@ -3,24 +3,16 @@ package com.samutamm.nano.popularmovies.data;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.test.AndroidTestCase;
 import android.test.MoreAsserts;
-import android.util.Log;
 
-import com.samutamm.nano.popularmovies.R;
+import com.samutamm.nano.popularmovies.TestUtilities;
 
 import junit.framework.Assert;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashSet;
 import static com.samutamm.nano.popularmovies.data.FavoriteContract.FavoriteEntry.*;
-import java.io.RandomAccessFile;
 
 public class FavoriteDbTest extends AndroidTestCase {
 
@@ -70,19 +62,7 @@ public class FavoriteDbTest extends AndroidTestCase {
         FavoriteDbHelper dbHelper = new FavoriteDbHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        Drawable d = mContext.getDrawable(R.drawable.placeholder);
-        Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] bitmapdata = stream.toByteArray();
-
-        ContentValues favoriteValues = new ContentValues();
-        favoriteValues.put(COLUMN_MOVIE_ID, "123");
-        favoriteValues.put(COLUMN_AVERAGE_RATE, "5.5");
-        favoriteValues.put(COLUMN_ORIGINAL_TITLE, "cinema");
-        favoriteValues.put(COLUMN_OVERVIEW, "asdjnasd ad adafg eirjwe");
-        favoriteValues.put(COLUMN_RELEASE_DATE, "2011-11-11");
-        favoriteValues.put(COLUMN_POSTER, bitmapdata);
+        ContentValues favoriteValues = TestUtilities.createFavorite(mContext);
 
         long favoriteRoxId = db.insert(TABLE_NAME, null, favoriteValues);
         assertTrue(favoriteRoxId != -1);
@@ -99,7 +79,7 @@ public class FavoriteDbTest extends AndroidTestCase {
 
         assertTrue("Error: No Records returned from favorite query", cursor.moveToFirst());
         final byte[] blob = cursor.getBlob(cursor.getColumnIndex(COLUMN_POSTER));
-        MoreAsserts.assertEquals(bitmapdata, blob);
+        MoreAsserts.assertEquals((byte[])favoriteValues.get(COLUMN_POSTER), blob);
         cursor.close();
         dbHelper.close();
     }
