@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import com.samutamm.nano.popularmovies.sync.FetchApi;
+import com.samutamm.nano.popularmovies.sync.MovieFetcher;
 import com.samutamm.nano.popularmovies.adapters.MovieAdapter;
 import com.samutamm.nano.popularmovies.R;
 import com.samutamm.nano.popularmovies.domain.Movie;
@@ -17,7 +17,7 @@ import com.samutamm.nano.popularmovies.domain.Movie;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchFragment extends Fragment implements AdapterView.OnItemSelectedListener, FetchApi.OnFetchCompleted {
+public class SearchFragment extends Fragment implements AdapterView.OnItemSelectedListener, MovieFetcher.OnFetchCompleted {
     public final String LOG_TAG = SearchFragment.class.getSimpleName();
 
     private MovieAdapter movieAdapter;
@@ -46,13 +46,14 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int i, long l) {
         String criteria = (String)parent.getItemAtPosition(i);
-        String urlCriteria = "";
+        final MovieFetcher fetcher = new MovieFetcher(getActivity(), this);
         if (criteria.equals(parent.getResources().getString(R.string.criteria_popular))) {
-            urlCriteria = "popular";
+            fetcher.fetchAPI("popular");
+        } else if(criteria.equals(parent.getResources().getString(R.string.criteria_rated))) {
+            fetcher.fetchAPI("top_rated");
         } else {
-            urlCriteria = "top_rated";
+            fetcher.fetchFavorites();
         }
-        new FetchApi(getActivity(), this).fetch(urlCriteria);
     }
 
 

@@ -3,6 +3,7 @@ package com.samutamm.nano.popularmovies.fragments;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -50,22 +51,32 @@ public class MovieFragment extends Fragment {
                     saveMovieToLocalDB(rootView.getContext(), movie, movieViewHolder)
             );
 
-            final String thumbnailUrl = Utility.getMovieUrl(movie, "w92");
-            Picasso.with(rootView.getContext())
-                    .load(thumbnailUrl)
-                    .into(new Target() {
-                        @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                            movieViewHolder.thumbnail.setImageBitmap(bitmap);
-                            imageDownloaded = true;
-                        }
-                        @Override
-                        public void onBitmapFailed(Drawable errorDrawable) {}
-                        @Override
-                        public void onPrepareLoad(Drawable placeHolderDrawable) {}
-                    });
+            if (movie.getPoster().length == 1) {
+                loadImageFromInternet(rootView, movieViewHolder, movie);
+            } else {
+                final byte[] poster = movie.getPoster();
+                Bitmap bitmap = BitmapFactory.decodeByteArray(poster, 0, poster.length);
+                movieViewHolder.thumbnail.setImageBitmap(bitmap);
+            }
         }
         return rootView;
+    }
+
+    private void loadImageFromInternet(View rootView, final MovieViewHolder movieViewHolder, Movie movie) {
+        final String thumbnailUrl = Utility.getMovieUrl(movie, "w92");
+        Picasso.with(rootView.getContext())
+                .load(thumbnailUrl)
+                .into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        movieViewHolder.thumbnail.setImageBitmap(bitmap);
+                        imageDownloaded = true;
+                    }
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {}
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {}
+                });
     }
 
     @NonNull

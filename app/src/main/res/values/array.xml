@@ -3,5 +3,6 @@
     <string-array name="search_criteria">
         <item>@string/criteria_popular</item>
         <item>@string/criteria_rated</item>
+        <item>@string/criteria_favorite</item>
     </string-array>
 </resources>

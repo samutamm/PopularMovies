@@ -11,6 +11,11 @@ public class Movie implements Parcelable {
     private String overview;
     private String vote_average;
     private String release_date;
+    private byte[] poster;
+
+    public Movie() {
+        poster = new byte[1];  // to avoid null pointer when parcing
+    }
 
     public String getPosterPath() {
         return poster_path;
@@ -22,6 +27,14 @@ public class Movie implements Parcelable {
      */
     public void setPoster_path(String poster_path) {
         this.poster_path = poster_path;
+    }
+
+    public byte[] getPoster() {
+        return poster;
+    }
+
+    public void setPoster(byte[] poster) {
+        this.poster = poster;
     }
 
     public String getId() {
@@ -81,6 +94,8 @@ public class Movie implements Parcelable {
         overview = in.readString();
         vote_average = in.readString();
         release_date = in.readString();
+        poster = new byte[in.readInt()];
+        in.readByteArray(poster);
     }
 
     @Override
@@ -97,6 +112,8 @@ public class Movie implements Parcelable {
         dest.writeString(overview);
         dest.writeString(vote_average);
         dest.writeString(release_date);
+        dest.writeInt(poster.length);
+        dest.writeByteArray(poster);
     }
 
     @SuppressWarnings("unused")
