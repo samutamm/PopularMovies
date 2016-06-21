@@ -31,7 +31,7 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
     }
 
     public void setTwoPaneModeToAdapter(boolean twoPane) {
-        movieAdapter.setTableteMode(twoPane);
+        movieAdapter.setTabletMode(twoPane);
     }
 
     @Override

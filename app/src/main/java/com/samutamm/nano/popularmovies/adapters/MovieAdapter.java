@@ -22,12 +22,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieRowViewHolder> {
 
     private Context mContext;
     private List<Movie> movieList;
-    private boolean tableteMode;
+    private boolean tabletMode;
 
     public MovieAdapter(Context c, List<Movie> movies) {
         mContext = c;
         movieList = movies;
-        tableteMode = false;
+        tabletMode = false;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieRowViewHolder> {
 
     @Override
     public void onBindViewHolder(MovieRowViewHolder holder, int position) {
-        if (tableteMode) {
+        if (tabletMode) {
             handleBigScreen(holder, position);
         } else {
             handleSmallScreen(holder, position);
@@ -66,7 +66,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieRowViewHolder> {
 
     @Override
     public int getItemCount() {
-        if (tableteMode) {
+        if (tabletMode) {
             return movieList.size() / 3; // Becouse we have 3 images on one 'item'
         }
         return movieList.size() / 2; // Becouse we have 2 images on one 'item'
@@ -94,8 +94,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieRowViewHolder> {
         };
     }
 
-    public void setTableteMode(boolean tableteMode) {
-        this.tableteMode = tableteMode;
+    public void setTabletMode(boolean tabletMode) {
+        this.tabletMode = tabletMode;
     }
 
     public interface OnImageClickCallback {

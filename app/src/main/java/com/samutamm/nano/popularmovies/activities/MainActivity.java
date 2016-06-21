@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.facebook.stetho.Stetho;
 import com.samutamm.nano.popularmovies.R;
 import com.samutamm.nano.popularmovies.adapters.MovieAdapter;
 import com.samutamm.nano.popularmovies.domain.Movie;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Stetho.initializeWithDefaults(this);
 
         if (findViewById(R.id.movie_detail_container) != null) {
             mTwoPane = true;
