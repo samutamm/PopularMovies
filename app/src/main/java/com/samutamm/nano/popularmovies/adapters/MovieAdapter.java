@@ -1,6 +1,8 @@
 package com.samutamm.nano.popularmovies.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,19 +75,28 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieRowViewHolder> {
     }
 
     public void addImageToView(final Movie movie, ImageView imageView) {
-        String size = "w185";
         imageView.setTag(movie);
+        if(movie.getPoster().length == 1) {
+            downloadImageFromInternet(movie, imageView);
+        } else {
+            final byte[] poster = movie.getPoster();
+            Bitmap bitmap = BitmapFactory.decodeByteArray(poster, 0, poster.length);
+            imageView.setImageBitmap(bitmap);
+        }
+        RxView.clicks(imageView).subscribe(startMovieActivity(movie));
+    }
+
+    private void downloadImageFromInternet(Movie movie, ImageView imageView) {
+        String size = "w185";
         String imageUrl = Utility.getMovieUrl(movie, size);
         Picasso.with(mContext.getApplicationContext())
                 .load(imageUrl)
                 .placeholder(R.drawable.placeholder)
                 .into(imageView);
-
-        RxView.clicks(imageView).subscribe(startMovieActivity(movie));
     }
 
     private Action1<Void> startMovieActivity(final Movie movie) {
-        final OnImageClickCallback callback = (OnImageClickCallback) (OnImageClickCallback)mContext;
+        final OnImageClickCallback callback = (OnImageClickCallback)mContext;
         return new Action1<Void>() {
             @Override
             public void call(Void aVoid) {

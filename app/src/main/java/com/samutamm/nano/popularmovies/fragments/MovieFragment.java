@@ -96,7 +96,7 @@ public class MovieFragment extends Fragment {
                     values.put(COLUMN_AVERAGE_RATE, movie.getVoteAverage());
                     values.put(COLUMN_POSTER, bitmapdata);
 
-                    final Uri inserted = context.getContentResolver().insert(
+                    context.getContentResolver().insert(
                             FavoriteContract.FavoriteEntry.CONTENT_URI, values
                     );
                     message = "Movie added to favorites!";
