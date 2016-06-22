@@ -51,8 +51,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieRowViewHolder> {
         Movie leftMovie = movieList.get(position);
         Movie rightMovie = movieList.get(movieList.size() - position - 1);
 
-        addImageToView(leftMovie, holder.leftImage);
-        addImageToView(rightMovie, holder.rightImage);
+        if (leftMovie.getId().equals(rightMovie.getId())) { // lets put the last item to left
+            addImageToView(leftMovie, holder.leftImage);
+            addImageToView(null, holder.rightImage);
+        } else {
+            addImageToView(leftMovie, holder.leftImage);
+            addImageToView(rightMovie, holder.rightImage);
+        }
     }
 
     private void handleBigScreen(MovieRowViewHolder holder, int position) {
@@ -62,6 +67,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieRowViewHolder> {
             if (indexes[i] != -1) {
                 Movie movie = movieList.get(indexes[i]);
                 addImageToView(movie, images[i]);
+            } else {
+                addImageToView(null, images[i]);
             }
         }
     }
@@ -69,12 +76,24 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieRowViewHolder> {
     @Override
     public int getItemCount() {
         if (tabletMode) {
-            return movieList.size() / 3; // Becouse we have 3 images on one 'item'
+            if (movieList.size() % 3 == 0) {
+                return movieList.size() / 3;
+            } else if((movieList.size() + 1) % 3 == 0) {
+                return (movieList.size() + 1) / 3;
+            } else {
+                return (movieList.size() + 2) / 3;
+            }
         }
-        return movieList.size() / 2; // Becouse we have 2 images on one 'item'
+        if (movieList.size() % 2 == 0) return movieList.size() / 2;
+        return (movieList.size() + 1) / 2; // Becouse we have 2 images on one 'item'
     }
 
     public void addImageToView(final Movie movie, ImageView imageView) {
+        if (movie == null) {
+            imageView.setImageResource(android.R.color.transparent); //clear image
+            imageView.setOnClickListener(null);
+            return;
+        }
         imageView.setTag(movie);
         if(movie.getPoster().length == 1) {
             downloadImageFromInternet(movie, imageView);
