@@ -1,14 +1,14 @@
 package com.samutamm.nano.popularmovies.fragments;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,8 +26,13 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.ByteArrayOutputStream;
+import java.util.concurrent.Callable;
 
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 import static com.samutamm.nano.popularmovies.data.FavoriteContract.FavoriteEntry.*;
 
@@ -47,9 +52,7 @@ public class MovieFragment extends Fragment {
             movieViewHolder.movieYear.setText(Utility.parseYear(movie.getReleaseDate()));
             movieViewHolder.averageVote.setText(movie.getVoteAverage() + "/10.0");
             movieViewHolder.synopsis.setText(movie.getOverview());
-            RxView.clicks(movieViewHolder.markFavoriteButton).subscribe(
-                    saveMovieToLocalDB(rootView.getContext(), movie, movieViewHolder)
-            );
+            addFavoriteButton(rootView, movieViewHolder, movie);
 
             if (movie.getPoster().length == 1) {
                 loadImageFromInternet(rootView, movieViewHolder, movie);
@@ -60,6 +63,60 @@ public class MovieFragment extends Fragment {
             }
         }
         return rootView;
+    }
+
+    private void addFavoriteButton(final View rootView, final MovieViewHolder viewHolder, final Movie movie) {
+        Observable.fromCallable(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return checkIfMovieIsFavorite(rootView, movie);
+            }
+        }).subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Observer<Boolean>() {
+            @Override
+            public void onCompleted() {}
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+            @Override
+            public void onNext(Boolean existsInDatabase) {
+                if(existsInDatabase) {
+                    setFavoriteButtonText(
+                            viewHolder, rootView.getContext(), R.string.favoriteButton_checked
+                    );
+                    RxView.clicks(viewHolder.markFavoriteButton).subscribe(
+                            removeMovieFromLocalDB(rootView.getContext(), movie, viewHolder)
+                    );
+                } else {
+                    RxView.clicks(viewHolder.markFavoriteButton).subscribe(
+                            saveMovieToLocalDB(rootView.getContext(), movie, viewHolder)
+                    );
+                }
+            }
+        });
+    }
+
+    private void setFavoriteButtonText(MovieViewHolder movieViewHolder, Context context, int id) {
+        movieViewHolder.markFavoriteButton.setText(
+                context.getResources().getString(id)
+        );
+    }
+
+
+    private boolean checkIfMovieIsFavorite(View rootView, Movie movie) {
+        final ContentResolver resolver = rootView.getContext().getContentResolver();
+        final Cursor query = resolver.query(
+                FavoriteContract.FavoriteEntry.CONTENT_URI,
+                null,
+                FavoriteContract.FavoriteEntry.COLUMN_MOVIE_ID + " = ?",
+                new String[]{movie.getId()},
+                null
+        );
+        final boolean exists = query != null && query.moveToFirst();
+        query.close();
+        return exists;
     }
 
     private void loadImageFromInternet(View rootView, final MovieViewHolder movieViewHolder, Movie movie) {
@@ -79,12 +136,28 @@ public class MovieFragment extends Fragment {
                 });
     }
 
-    @NonNull
+    private Action1<Void> removeMovieFromLocalDB(
+            final Context context, final Movie movie, final MovieViewHolder viewHolder) {
+        return new Action1<Void>() {
+            @Override
+            public void call(Void aVoid) {
+                context.getContentResolver().delete(
+                        FavoriteContract.FavoriteEntry.CONTENT_URI,
+                        FavoriteContract.FavoriteEntry.COLUMN_MOVIE_ID + " = ?",
+                        new String[]{movie.getId()}
+                );
+                setFavoriteButtonText(viewHolder, context, R.string.favoriteButton_notChecked);
+                Toast.makeText(context, "Deleted", Toast.LENGTH_LONG).show();
+            }
+        };
+    }
+
     private Action1<Void> saveMovieToLocalDB(
             final Context context, final Movie movie, final MovieViewHolder viewHolder) {
         return new Action1<Void>() {
             @Override
             public void call(Void aVoid) {
+                setFavoriteButtonText(viewHolder, context, R.string.favoriteButton_checked);
                 String message = "";
                 if (imageDownloaded) {
                     byte[] bitmapdata = getImageBytes(viewHolder);

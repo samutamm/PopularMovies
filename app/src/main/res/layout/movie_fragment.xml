@@ -65,7 +65,7 @@
 
                 <Button
                     android:id="@+id/markMovieAsFavorite"
-                    android:text="@string/favoriteButton"
+                    android:text="@string/favoriteButton.notChecked"
                     android:textSize="12sp"
                     android:background="@color/movieFragmetLight"
                     style="@style/movie_detail" />

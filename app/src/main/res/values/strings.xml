@@ -6,7 +6,8 @@
     <string name="vote_average">Vote average:</string>
     <string name="release_date">Release date:</string>
     <string name="lineDescription">This line marks the end of synopsis text.</string>
-    <string name="favoriteButton">Mark as \n favorite</string>
+    <string name="favoriteButton.notChecked">Mark as \n favorite</string>
+    <string name="favoriteButton.checked">Delete from \n favorites</string>
 
     <string name="content_authority">com.samutamm.nano.popularmovies</string>
 </resources>
