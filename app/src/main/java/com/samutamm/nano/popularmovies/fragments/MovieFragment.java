@@ -3,11 +3,13 @@ package com.samutamm.nano.popularmovies.fragments;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -201,12 +203,27 @@ public class MovieFragment extends Fragment implements OnTrailerFetchCompleted {
         if (result != null) {
             final LinearLayout trailers = holder.trailers;
             for (Trailer trailer: result) {
-                final View row = LayoutInflater
-                        .from(getContext()).inflate(R.layout.trailer_row, trailers, false);
-                TrailerRowViewHolder trailerHolder = new TrailerRowViewHolder(row);
-                trailerHolder.trailerUrl.setText(trailer.getName());
-                trailers.addView(row);
+                if (trailer.getSite().equals("YouTube")) {
+                    final View row = LayoutInflater
+                            .from(getContext()).inflate(R.layout.trailer_row, trailers, false);
+                    handleOneTrailer(trailer, row);
+                    trailers.addView(row);
+                }
             }
         }
+    }
+
+    private void handleOneTrailer(final Trailer trailer, View row) {
+        TrailerRowViewHolder trailerHolder = new TrailerRowViewHolder(row);
+        trailerHolder.trailerName.setText(trailer.getName());
+        RxView.clicks(trailerHolder.playTrailer).subscribe(new Action1<Void>() {
+            @Override
+            public void call(Void aVoid) {
+                String youtubeID = trailer.getKey();
+                startActivity(new Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("http://www.youtube.com/watch?v=" + youtubeID)));
+            }
+        });
     }
 }
