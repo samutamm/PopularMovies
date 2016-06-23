@@ -13,19 +13,25 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.jakewharton.rxbinding.view.RxView;
 import com.samutamm.nano.popularmovies.R;
 import com.samutamm.nano.popularmovies.data.FavoriteContract;
+import com.samutamm.nano.popularmovies.domain.Trailer;
 import com.samutamm.nano.popularmovies.helpers.MovieViewHolder;
+import com.samutamm.nano.popularmovies.helpers.OnTrailerFetchCompleted;
+import com.samutamm.nano.popularmovies.helpers.TrailerRowViewHolder;
 import com.samutamm.nano.popularmovies.helpers.Utility;
 import com.samutamm.nano.popularmovies.activities.MovieActivity;
 import com.samutamm.nano.popularmovies.domain.Movie;
+import com.samutamm.nano.popularmovies.sync.APIFetcher;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import rx.Observable;
@@ -36,7 +42,7 @@ import rx.schedulers.Schedulers;
 
 import static com.samutamm.nano.popularmovies.data.FavoriteContract.FavoriteEntry.*;
 
-public class MovieFragment extends Fragment {
+public class MovieFragment extends Fragment implements OnTrailerFetchCompleted {
 
     private boolean imageDownloaded = false;
 
@@ -61,6 +67,8 @@ public class MovieFragment extends Fragment {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(poster, 0, poster.length);
                 movieViewHolder.thumbnail.setImageBitmap(bitmap);
             }
+            APIFetcher fetcher = new APIFetcher(rootView.getContext());
+            fetcher.fetchTrailers(movie, movieViewHolder ,this);
         }
         return rootView;
     }
@@ -186,5 +194,19 @@ public class MovieFragment extends Fragment {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         return stream.toByteArray();
+    }
+
+    @Override
+    public void onFetchCompleted(List<Trailer> result, MovieViewHolder holder) {
+        if (result != null) {
+            final LinearLayout trailers = holder.trailers;
+            for (Trailer trailer: result) {
+                final View row = LayoutInflater
+                        .from(getContext()).inflate(R.layout.trailer_row, trailers, false);
+                TrailerRowViewHolder trailerHolder = new TrailerRowViewHolder(row);
+                trailerHolder.trailerUrl.setText(trailer.getName());
+                trailers.addView(row);
+            }
+        }
     }
 }

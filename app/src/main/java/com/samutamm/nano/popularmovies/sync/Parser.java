@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.samutamm.nano.popularmovies.domain.Movie;
+import com.samutamm.nano.popularmovies.domain.Trailer;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -19,13 +20,25 @@ public class Parser {
         gson = new Gson();
     }
 
-    public List<Movie> parseJson(String jsonString) {
+    public List<Movie> parseMovies(String jsonString) {
         if (jsonString != null) {
             final JsonObject json = gson.fromJson(jsonString, JsonObject.class);
             final String resultsKey = "results";
             if (json != null && json.has(resultsKey)) {
                 final JsonElement results = json.get(resultsKey);
                 return gson.fromJson(results, new TypeToken<List<Movie>>(){}.getType());
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    public List<Trailer> parseTrailers(String jsonString) {
+        if (jsonString != null) {
+            final JsonObject json = gson.fromJson(jsonString, JsonObject.class);
+            final String resultsKey = "results";
+            if (json != null && json.has(resultsKey)) {
+                final JsonElement results = json.get(resultsKey);
+                return gson.fromJson(results, new TypeToken<List<Trailer>>(){}.getType());
             }
         }
         return new ArrayList<>();

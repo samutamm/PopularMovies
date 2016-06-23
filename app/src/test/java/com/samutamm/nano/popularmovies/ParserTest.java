@@ -16,7 +16,7 @@ public class ParserTest {
     @Test
     public void testParsing() {
         Parser p = new Parser();
-        final List<Movie> movies = p.parseJson(jsonToParse);
+        final List<Movie> movies = p.parseMovies(jsonToParse);
         assertNotNull(movies);
         assertEquals(movies.size(), 20);
     }
