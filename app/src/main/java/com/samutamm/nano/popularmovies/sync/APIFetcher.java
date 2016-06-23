@@ -11,6 +11,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.samutamm.nano.popularmovies.BuildConfig;
+import com.samutamm.nano.popularmovies.domain.Comment;
 import com.samutamm.nano.popularmovies.domain.Movie;
 import com.samutamm.nano.popularmovies.domain.Trailer;
 import com.samutamm.nano.popularmovies.helpers.MovieViewHolder;
@@ -30,29 +31,45 @@ public class APIFetcher {
         mContext = context;
     }
 
-    public void fetchMovies(String criteria, final OnMovieFetchCompleted listener) {
+    private void fetch(String url, Response.Listener<String> success, Response.ErrorListener fail) {
         final RequestQueue queue = Volley.newRequestQueue(mContext);
-        String url = getUrl(URLContract.BASE_URL + criteria + "?");
         System.out.println(url);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String json) {
-                        List<Movie> movies = parser.parseMovies(json);
-                        listener.onFetchCompleted(movies);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-                Toast.makeText(
-                        mContext,
-                        "Please check your internet connection! Cannot load the movies.",
-                        Toast.LENGTH_LONG
-                ).show();
-            }
-        });
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, success, fail);
         queue.add(stringRequest);
+    }
+
+    public void fetchMovies(String criteria, final OnMovieFetchCompleted listener) {
+        String url = getUrl(URLContract.BASE_URL + criteria + "?");
+        fetch(url,(json)-> {
+                    List<Movie> movies = parser.parseMovies(json);
+                    listener.onFetchCompleted(movies);
+                }, (error) -> {
+                    error.printStackTrace();
+                    Toast.makeText(mContext, "Please check your internet " +
+                                    "connection! Cannot load the movies.", Toast.LENGTH_LONG
+                    ).show();
+                }
+        );
+    }
+
+    public void fetchTrailers(Movie movie,
+                              final MovieViewHolder holder,
+                              final OnTrailerFetchCompleted mListener) {
+        String url = getUrl(URLContract.BASE_URL + movie.getId() + "/videos?");
+        fetch(url, (json) -> {
+                    List<Trailer> trailers = parser.parseTrailers(json);
+                    mListener.onFetchCompleted(trailers, holder);
+                }, (error) -> error.printStackTrace());
+    }
+
+    public void fetchComments(Movie movie,
+                              final MovieViewHolder holder,
+                              final OnTrailerFetchCompleted mListener) {
+        String url = getUrl(URLContract.BASE_URL + movie.getId() + "/comments?");
+        fetch(url, (json)-> {
+                        List<Comment> comments = parser.parseComments(json);
+                        //mListener.onFetchCompleted(trailers, holder);
+                }, (error -> error.printStackTrace()));
     }
 
     public String getUrl(String baseurl) {;
@@ -62,27 +79,6 @@ public class APIFetcher {
                 .build();
 
         return builtUri.toString();
-    }
-
-    public void fetchTrailers(Movie movie,
-                              final MovieViewHolder holder,
-                              final OnTrailerFetchCompleted mListener) {
-        final RequestQueue queue = Volley.newRequestQueue(mContext);
-        String url = getUrl(URLContract.BASE_URL + movie.getId() + "/videos?");
-        System.out.println(url);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String json) {
-                        List<Trailer> trailers = parser.parseTrailers(json);
-                        mListener.onFetchCompleted(trailers, holder);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            }
-        });
-        queue.add(stringRequest);
     }
 
     public class URLContract {

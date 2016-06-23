@@ -62,15 +62,15 @@ public class MovieFragment extends Fragment implements OnTrailerFetchCompleted {
             movieViewHolder.synopsis.setText(movie.getOverview());
             addFavoriteButton(rootView, movieViewHolder, movie);
 
-            if (movie.getPoster().length == 1) {
+            if (movie.getPoster().length == 1) { //We are not showing the favorites
                 loadImageFromInternet(rootView, movieViewHolder, movie);
-            } else {
+                APIFetcher fetcher = new APIFetcher(rootView.getContext());
+                fetcher.fetchTrailers(movie, movieViewHolder ,this);
+            } else { // shoving favorites, let's not fetch trailers or image
                 final byte[] poster = movie.getPoster();
                 Bitmap bitmap = BitmapFactory.decodeByteArray(poster, 0, poster.length);
                 movieViewHolder.thumbnail.setImageBitmap(bitmap);
             }
-            APIFetcher fetcher = new APIFetcher(rootView.getContext());
-            fetcher.fetchTrailers(movie, movieViewHolder ,this);
         }
         return rootView;
     }
