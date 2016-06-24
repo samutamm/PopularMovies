@@ -21,40 +21,31 @@ public class Parser {
         gson = new Gson();
     }
 
-    //TODO REFACTOR DUPLICATES
-    public List<Movie> parseMovies(String jsonString) {
+    private List parse(String jsonString, Function function) {
         if (jsonString != null) {
             final JsonObject json = gson.fromJson(jsonString, JsonObject.class);
             final String resultsKey = "results";
             if (json != null && json.has(resultsKey)) {
                 final JsonElement results = json.get(resultsKey);
-                return gson.fromJson(results, new TypeToken<List<Movie>>(){}.getType());
+                return function.call(results);
             }
         }
         return new ArrayList<>();
+    }
+
+    public List<Movie> parseMovies(String jsonString) {
+        return parse(jsonString, (res -> gson.fromJson(res, new TypeToken<List<Movie>>(){}.getType())));
     }
 
     public List<Trailer> parseTrailers(String jsonString) {
-        if (jsonString != null) {
-            final JsonObject json = gson.fromJson(jsonString, JsonObject.class);
-            final String resultsKey = "results";
-            if (json != null && json.has(resultsKey)) {
-                final JsonElement results = json.get(resultsKey);
-                return gson.fromJson(results, new TypeToken<List<Trailer>>(){}.getType());
-            }
-        }
-        return new ArrayList<>();
+        return parse(jsonString, (res) -> gson.fromJson(res, new TypeToken<List<Trailer>>(){}.getType()));
     }
 
     public List<Comment> parseComments(String jsonString) {
-        if (jsonString != null) {
-            final JsonObject json = gson.fromJson(jsonString, JsonObject.class);
-            final String resultsKey = "results";
-            if (json != null && json.has(resultsKey)) {
-                final JsonElement results = json.get(resultsKey);
-                return gson.fromJson(results, new TypeToken<List<Comment>>(){}.getType());
-            }
-        }
-        return new ArrayList<>();
+        return parse(jsonString, (res)->gson.fromJson(res, new TypeToken<List<Comment>>(){}.getType()));
+    }
+
+    private interface Function {
+        public List<?> call(JsonElement results);
     }
 }
