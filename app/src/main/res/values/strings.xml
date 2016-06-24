@@ -10,4 +10,6 @@
     <string name="favoriteButton.checked">Delete from \n favorites</string>
 
     <string name="content_authority">com.samutamm.nano.popularmovies</string>
+    <string name="show_comments">Show comments</string>
+    <string name="trailers">Trailers:</string>
 </resources>

@@ -16,13 +16,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jakewharton.rxbinding.view.RxView;
 import com.samutamm.nano.popularmovies.R;
 import com.samutamm.nano.popularmovies.data.FavoriteContract;
+import com.samutamm.nano.popularmovies.domain.Comment;
 import com.samutamm.nano.popularmovies.domain.Trailer;
+import com.samutamm.nano.popularmovies.helpers.CommentRowViewHolder;
 import com.samutamm.nano.popularmovies.helpers.MovieViewHolder;
+import com.samutamm.nano.popularmovies.helpers.OnCommentsFetchCompleted;
 import com.samutamm.nano.popularmovies.helpers.OnTrailerFetchCompleted;
 import com.samutamm.nano.popularmovies.helpers.TrailerRowViewHolder;
 import com.samutamm.nano.popularmovies.helpers.Utility;
@@ -44,7 +49,7 @@ import rx.schedulers.Schedulers;
 
 import static com.samutamm.nano.popularmovies.data.FavoriteContract.FavoriteEntry.*;
 
-public class MovieFragment extends Fragment implements OnTrailerFetchCompleted {
+public class MovieFragment extends Fragment implements OnTrailerFetchCompleted, OnCommentsFetchCompleted {
 
     private boolean imageDownloaded = false;
 
@@ -63,16 +68,26 @@ public class MovieFragment extends Fragment implements OnTrailerFetchCompleted {
             addFavoriteButton(rootView, movieViewHolder, movie);
 
             if (movie.getPoster().length == 1) { //We are not showing the favorites
-                loadImageFromInternet(rootView, movieViewHolder, movie);
-                APIFetcher fetcher = new APIFetcher(rootView.getContext());
-                fetcher.fetchTrailers(movie, movieViewHolder ,this);
-            } else { // shoving favorites, let's not fetch trailers or image
-                final byte[] poster = movie.getPoster();
-                Bitmap bitmap = BitmapFactory.decodeByteArray(poster, 0, poster.length);
-                movieViewHolder.thumbnail.setImageBitmap(bitmap);
+                setUpViewWithConnection(rootView.getContext(), movieViewHolder, movie);
+            } else { // shoving favorites, let's not fetch trailers, image,or comments
+                setUpFavoritesView(movieViewHolder, movie);
             }
         }
         return rootView;
+    }
+
+    private void setUpFavoritesView(MovieViewHolder movieViewHolder, Movie movie) {
+        final byte[] poster = movie.getPoster();
+        Bitmap bitmap = BitmapFactory.decodeByteArray(poster, 0, poster.length);
+        movieViewHolder.thumbnail.setImageBitmap(bitmap);
+    }
+
+    private void setUpViewWithConnection(Context context, MovieViewHolder viewHolder, Movie movie) {
+        loadImageFromInternet(context, viewHolder, movie);
+        APIFetcher fetcher = new APIFetcher(context);
+        fetcher.fetchTrailers(movie, viewHolder ,this);
+
+        setUpCommentsButton(context, fetcher, viewHolder, movie);
     }
 
     private void addFavoriteButton(final View rootView, final MovieViewHolder viewHolder, final Movie movie) {
@@ -129,9 +144,9 @@ public class MovieFragment extends Fragment implements OnTrailerFetchCompleted {
         return exists;
     }
 
-    private void loadImageFromInternet(View rootView, final MovieViewHolder movieViewHolder, Movie movie) {
+    private void loadImageFromInternet(Context context, final MovieViewHolder movieViewHolder, Movie movie) {
         final String thumbnailUrl = Utility.getMovieUrl(movie, "w92");
-        Picasso.with(rootView.getContext())
+        Picasso.with(context)
                 .load(thumbnailUrl)
                 .into(new Target() {
                     @Override
@@ -148,46 +163,40 @@ public class MovieFragment extends Fragment implements OnTrailerFetchCompleted {
 
     private Action1<Void> removeMovieFromLocalDB(
             final Context context, final Movie movie, final MovieViewHolder viewHolder) {
-        return new Action1<Void>() {
-            @Override
-            public void call(Void aVoid) {
-                context.getContentResolver().delete(
-                        FavoriteContract.FavoriteEntry.CONTENT_URI,
-                        FavoriteContract.FavoriteEntry.COLUMN_MOVIE_ID + " = ?",
-                        new String[]{movie.getId()}
-                );
-                setFavoriteButtonText(viewHolder, context, R.string.favoriteButton_notChecked);
-                Toast.makeText(context, "Deleted", Toast.LENGTH_LONG).show();
-            }
+        return (v) -> {
+            context.getContentResolver().delete(
+                    FavoriteContract.FavoriteEntry.CONTENT_URI,
+                    FavoriteContract.FavoriteEntry.COLUMN_MOVIE_ID + " = ?",
+                    new String[]{movie.getId()}
+            );
+            setFavoriteButtonText(viewHolder, context, R.string.favoriteButton_notChecked);
+            Toast.makeText(context, "Deleted", Toast.LENGTH_LONG).show();
         };
     }
 
     private Action1<Void> saveMovieToLocalDB(
             final Context context, final Movie movie, final MovieViewHolder viewHolder) {
-        return new Action1<Void>() {
-            @Override
-            public void call(Void aVoid) {
-                setFavoriteButtonText(viewHolder, context, R.string.favoriteButton_checked);
-                String message = "";
-                if (imageDownloaded) {
-                    byte[] bitmapdata = getImageBytes(viewHolder);
-                    ContentValues values = new ContentValues();
-                    values.put(COLUMN_MOVIE_ID, movie.getId());
-                    values.put(COLUMN_RELEASE_DATE, movie.getReleaseDate());
-                    values.put(COLUMN_OVERVIEW, movie.getOverview());
-                    values.put(COLUMN_ORIGINAL_TITLE, movie.getOriginalTitle());
-                    values.put(COLUMN_AVERAGE_RATE, movie.getVoteAverage());
-                    values.put(COLUMN_POSTER, bitmapdata);
+        return (v) -> {
+            setFavoriteButtonText(viewHolder, context, R.string.favoriteButton_checked);
+            String message = "";
+            if (imageDownloaded) {
+                byte[] bitmapdata = getImageBytes(viewHolder);
+                ContentValues values = new ContentValues();
+                values.put(COLUMN_MOVIE_ID, movie.getId());
+                values.put(COLUMN_RELEASE_DATE, movie.getReleaseDate());
+                values.put(COLUMN_OVERVIEW, movie.getOverview());
+                values.put(COLUMN_ORIGINAL_TITLE, movie.getOriginalTitle());
+                values.put(COLUMN_AVERAGE_RATE, movie.getVoteAverage());
+                values.put(COLUMN_POSTER, bitmapdata);
 
-                    context.getContentResolver().insert(
-                            FavoriteContract.FavoriteEntry.CONTENT_URI, values
-                    );
-                    message = "Movie added to favorites!";
-                } else {
-                    message = "Cannot load the image, please check your internet connection.";
-                }
-                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                context.getContentResolver().insert(
+                        FavoriteContract.FavoriteEntry.CONTENT_URI, values
+                );
+                message = "Movie added to favorites!";
+            } else {
+                message = "Cannot load the image, please check your internet connection.";
             }
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show();
         };
     }
 
@@ -199,7 +208,7 @@ public class MovieFragment extends Fragment implements OnTrailerFetchCompleted {
     }
 
     @Override
-    public void onFetchCompleted(List<Trailer> result, MovieViewHolder holder) {
+    public void onTrailers(List<Trailer> result, MovieViewHolder holder) {
         if (result != null) {
             final LinearLayout trailers = holder.trailers;
             for (Trailer trailer: result) {
@@ -216,14 +225,38 @@ public class MovieFragment extends Fragment implements OnTrailerFetchCompleted {
     private void handleOneTrailer(final Trailer trailer, View row) {
         TrailerRowViewHolder trailerHolder = new TrailerRowViewHolder(row);
         trailerHolder.trailerName.setText(trailer.getName());
-        RxView.clicks(trailerHolder.playTrailer).subscribe(new Action1<Void>() {
-            @Override
-            public void call(Void aVoid) {
+        RxView.clicks(trailerHolder.playTrailer).subscribe((v) -> {
                 String youtubeID = trailer.getKey();
                 startActivity(new Intent(
                         Intent.ACTION_VIEW,
                         Uri.parse("http://www.youtube.com/watch?v=" + youtubeID)));
-            }
         });
+    }
+
+    private void setUpCommentsButton(Context context, APIFetcher fetcher,
+                                     MovieViewHolder viewHolder, Movie movie) {
+        RxView.clicks(viewHolder.showComments).subscribe((v) -> {
+            fetcher.fetchComments(context, movie, viewHolder, this);
+        });
+    }
+
+    @Override
+    public void onComments(Context context, List<Comment> results, MovieViewHolder holder) {
+        LinearLayout comments = new LinearLayout(getContext());
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        comments.setOrientation(LinearLayout.VERTICAL);
+        comments.setLayoutParams(params);
+        for (Comment c: results) {
+            final View row = LayoutInflater
+                    .from(getContext()).inflate(R.layout.comment_row, comments, false);
+            CommentRowViewHolder commentHolder = new CommentRowViewHolder(row);
+            commentHolder.author.setText(c.getAuthor());
+            commentHolder.content.setText(c.getContent());
+            comments.addView(row);
+        }
+
+        holder.movieLayout.addView(comments);
     }
 }

@@ -7,7 +7,6 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.samutamm.nano.popularmovies.BuildConfig;
@@ -15,6 +14,7 @@ import com.samutamm.nano.popularmovies.domain.Comment;
 import com.samutamm.nano.popularmovies.domain.Movie;
 import com.samutamm.nano.popularmovies.domain.Trailer;
 import com.samutamm.nano.popularmovies.helpers.MovieViewHolder;
+import com.samutamm.nano.popularmovies.helpers.OnCommentsFetchCompleted;
 import com.samutamm.nano.popularmovies.helpers.OnMovieFetchCompleted;
 import com.samutamm.nano.popularmovies.helpers.OnTrailerFetchCompleted;
 
@@ -58,17 +58,17 @@ public class APIFetcher {
         String url = getUrl(URLContract.BASE_URL + movie.getId() + "/videos?");
         fetch(url, (json) -> {
                     List<Trailer> trailers = parser.parseTrailers(json);
-                    mListener.onFetchCompleted(trailers, holder);
+                    mListener.onTrailers(trailers, holder);
                 }, (error) -> error.printStackTrace());
     }
 
-    public void fetchComments(Movie movie,
+    public void fetchComments(Context context, Movie movie,
                               final MovieViewHolder holder,
-                              final OnTrailerFetchCompleted mListener) {
-        String url = getUrl(URLContract.BASE_URL + movie.getId() + "/comments?");
+                              final OnCommentsFetchCompleted mListener) {
+        String url = getUrl(URLContract.BASE_URL + movie.getId() + "/reviews?");
         fetch(url, (json)-> {
                         List<Comment> comments = parser.parseComments(json);
-                        //mListener.onFetchCompleted(trailers, holder);
+                        mListener.onComments(context, comments, holder);
                 }, (error -> error.printStackTrace()));
     }
 
