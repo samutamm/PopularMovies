@@ -1,6 +1,7 @@
-package com.samutamm.nano.popularmovies.helpers;
+package com.samutamm.nano.popularmovies.interfaces;
 
 import com.samutamm.nano.popularmovies.domain.Trailer;
+import com.samutamm.nano.popularmovies.helpers.MovieViewHolder;
 
 import java.util.List;
 

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.samutamm.nano.popularmovies.data.DatabaseFetcher;
-import com.samutamm.nano.popularmovies.helpers.OnMovieFetchCompleted;
+import com.samutamm.nano.popularmovies.interfaces.OnMovieFetchCompleted;
 import com.samutamm.nano.popularmovies.sync.APIFetcher;
 import com.samutamm.nano.popularmovies.adapters.MovieAdapter;
 import com.samutamm.nano.popularmovies.R;

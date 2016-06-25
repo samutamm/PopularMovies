@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.samutamm.nano.popularmovies.domain.Movie;
-import com.samutamm.nano.popularmovies.helpers.OnMovieFetchCompleted;
+import com.samutamm.nano.popularmovies.interfaces.OnMovieFetchCompleted;
 
 import java.util.ArrayList;
 import java.util.List;

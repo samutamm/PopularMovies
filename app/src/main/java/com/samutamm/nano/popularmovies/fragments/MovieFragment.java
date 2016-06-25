@@ -16,8 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jakewharton.rxbinding.view.RxView;
@@ -27,8 +25,8 @@ import com.samutamm.nano.popularmovies.domain.Comment;
 import com.samutamm.nano.popularmovies.domain.Trailer;
 import com.samutamm.nano.popularmovies.helpers.CommentRowViewHolder;
 import com.samutamm.nano.popularmovies.helpers.MovieViewHolder;
-import com.samutamm.nano.popularmovies.helpers.OnCommentsFetchCompleted;
-import com.samutamm.nano.popularmovies.helpers.OnTrailerFetchCompleted;
+import com.samutamm.nano.popularmovies.interfaces.OnCommentsFetchCompleted;
+import com.samutamm.nano.popularmovies.interfaces.OnTrailerFetchCompleted;
 import com.samutamm.nano.popularmovies.helpers.TrailerRowViewHolder;
 import com.samutamm.nano.popularmovies.helpers.Utility;
 import com.samutamm.nano.popularmovies.activities.MovieActivity;
@@ -236,12 +234,12 @@ public class MovieFragment extends Fragment implements OnTrailerFetchCompleted, 
     private void setUpCommentsButton(Context context, APIFetcher fetcher,
                                      MovieViewHolder viewHolder, Movie movie) {
         RxView.clicks(viewHolder.showComments).subscribe((v) -> {
-            fetcher.fetchComments(context, movie, viewHolder, this);
+            fetcher.fetchComments(movie, viewHolder, this);
         });
     }
 
     @Override
-    public void onComments(Context context, List<Comment> results, MovieViewHolder holder) {
+    public void onComments(List<Comment> results, MovieViewHolder holder) {
         LinearLayout comments = new LinearLayout(getContext());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
