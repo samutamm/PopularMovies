@@ -10,6 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.samutamm.nano.popularmovies.BuildConfig;
+import com.samutamm.nano.popularmovies.R;
 import com.samutamm.nano.popularmovies.domain.Comment;
 import com.samutamm.nano.popularmovies.domain.Movie;
 import com.samutamm.nano.popularmovies.domain.Trailer;
@@ -45,8 +46,8 @@ public class APIFetcher {
                     listener.onFetchCompleted(movies);
                 }, (error) -> {
                     error.printStackTrace();
-                    Toast.makeText(mContext, "Please check your internet " +
-                                    "connection! Cannot load the movies.", Toast.LENGTH_LONG
+                    String message = mContext.getString(R.string.movies_nointernet);
+                    Toast.makeText(mContext, message, Toast.LENGTH_LONG
                     ).show();
                 }
         );

@@ -11,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,7 +64,7 @@ public class MovieFragment extends Fragment implements OnTrailerFetchCompleted, 
             movieViewHolder.movieYear.setText(Utility.parseYear(movie.getReleaseDate()));
             movieViewHolder.averageVote.setText(movie.getVoteAverage() + "/10.0");
             movieViewHolder.synopsis.setText(movie.getOverview());
-            addFavoriteButton(rootView, movieViewHolder, movie);
+            addFavoriteButton(rootView.getContext(), movieViewHolder, movie);
 
             if (movie.getPoster().length == 1) { //We are not showing the favorites
                 setUpViewWithConnection(rootView.getContext(), movieViewHolder, movie);
@@ -85,16 +86,12 @@ public class MovieFragment extends Fragment implements OnTrailerFetchCompleted, 
         APIFetcher fetcher = new APIFetcher(context);
         fetcher.fetchTrailers(movie, viewHolder ,this);
 
-        setUpCommentsButton(context, fetcher, viewHolder, movie);
+        setUpCommentsButton(fetcher, viewHolder, movie);
     }
 
-    private void addFavoriteButton(final View rootView, final MovieViewHolder viewHolder, final Movie movie) {
-        Observable.fromCallable(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                return checkIfMovieIsFavorite(rootView, movie);
-            }
-        }).subscribeOn(Schedulers.io())
+    private void addFavoriteButton(Context context, final MovieViewHolder viewHolder, final Movie movie) {
+        Observable.fromCallable(()-> checkIfMovieIsFavorite(context, movie))
+        .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Observer<Boolean>() {
             @Override
@@ -106,30 +103,21 @@ public class MovieFragment extends Fragment implements OnTrailerFetchCompleted, 
             @Override
             public void onNext(Boolean existsInDatabase) {
                 if(existsInDatabase) {
-                    setFavoriteButtonText(
-                            viewHolder, rootView.getContext(), R.string.favoriteButton_checked
-                    );
+                    viewHolder.markFavoriteButton.setText(getString( R.string.favoriteButton_checked));
                     RxView.clicks(viewHolder.markFavoriteButton).subscribe(
-                            removeMovieFromLocalDB(rootView.getContext(), movie, viewHolder)
+                            removeMovieFromLocalDB(context, movie, viewHolder)
                     );
                 } else {
                     RxView.clicks(viewHolder.markFavoriteButton).subscribe(
-                            saveMovieToLocalDB(rootView.getContext(), movie, viewHolder)
+                            saveMovieToLocalDB(context, movie, viewHolder)
                     );
                 }
             }
         });
     }
 
-    private void setFavoriteButtonText(MovieViewHolder movieViewHolder, Context context, int id) {
-        movieViewHolder.markFavoriteButton.setText(
-                context.getResources().getString(id)
-        );
-    }
-
-
-    private boolean checkIfMovieIsFavorite(View rootView, Movie movie) {
-        final ContentResolver resolver = rootView.getContext().getContentResolver();
+    private boolean checkIfMovieIsFavorite(Context context, Movie movie) {
+        final ContentResolver resolver = context.getContentResolver();
         final Cursor query = resolver.query(
                 FavoriteContract.FavoriteEntry.CONTENT_URI,
                 null,
@@ -137,7 +125,8 @@ public class MovieFragment extends Fragment implements OnTrailerFetchCompleted, 
                 new String[]{movie.getId()},
                 null
         );
-        final boolean exists = query != null && query.moveToFirst();
+        if (query == null) return false;
+        final boolean exists = query.moveToFirst();
         query.close();
         return exists;
     }
@@ -162,47 +151,39 @@ public class MovieFragment extends Fragment implements OnTrailerFetchCompleted, 
     private Action1<Void> removeMovieFromLocalDB(
             final Context context, final Movie movie, final MovieViewHolder viewHolder) {
         return (v) -> {
+            RxView.clicks(viewHolder.markFavoriteButton).subscribe(
+                    saveMovieToLocalDB(context, movie, viewHolder)
+            );
             context.getContentResolver().delete(
                     FavoriteContract.FavoriteEntry.CONTENT_URI,
                     FavoriteContract.FavoriteEntry.COLUMN_MOVIE_ID + " = ?",
                     new String[]{movie.getId()}
             );
-            setFavoriteButtonText(viewHolder, context, R.string.favoriteButton_notChecked);
-            Toast.makeText(context, "Deleted", Toast.LENGTH_LONG).show();
+            viewHolder.markFavoriteButton.setText(getString( R.string.favoriteButton_notChecked));
+            String message = getString(R.string.favorite_message_removed);
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         };
     }
 
     private Action1<Void> saveMovieToLocalDB(
             final Context context, final Movie movie, final MovieViewHolder viewHolder) {
         return (v) -> {
-            setFavoriteButtonText(viewHolder, context, R.string.favoriteButton_checked);
-            String message = "";
             if (imageDownloaded) {
-                byte[] bitmapdata = getImageBytes(viewHolder);
-                ContentValues values = new ContentValues();
-                values.put(COLUMN_MOVIE_ID, movie.getId());
-                values.put(COLUMN_RELEASE_DATE, movie.getReleaseDate());
-                values.put(COLUMN_OVERVIEW, movie.getOverview());
-                values.put(COLUMN_ORIGINAL_TITLE, movie.getOriginalTitle());
-                values.put(COLUMN_AVERAGE_RATE, movie.getVoteAverage());
-                values.put(COLUMN_POSTER, bitmapdata);
-
+                viewHolder.markFavoriteButton.setText(getString( R.string.favoriteButton_checked));
+                ContentValues values = Utility.movieToContentValues(movie, viewHolder);
+                RxView.clicks(viewHolder.markFavoriteButton).subscribe(
+                        removeMovieFromLocalDB(context, movie, viewHolder)
+                );
                 context.getContentResolver().insert(
                         FavoriteContract.FavoriteEntry.CONTENT_URI, values
                 );
-                message = "Movie added to favorites!";
+                String message = getString(R.string.favorite_message_added);
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
             } else {
-                message = "Cannot load the image, please check your internet connection.";
+                String message = getString(R.string.favorite_message_nointernet);
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
             }
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show();
         };
-    }
-
-    private byte[] getImageBytes(MovieViewHolder viewHolder) {
-        Bitmap bitmap = ((BitmapDrawable)viewHolder.thumbnail.getDrawable()).getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        return stream.toByteArray();
     }
 
     @Override
@@ -231,7 +212,7 @@ public class MovieFragment extends Fragment implements OnTrailerFetchCompleted, 
         });
     }
 
-    private void setUpCommentsButton(Context context, APIFetcher fetcher,
+    private void setUpCommentsButton(APIFetcher fetcher,
                                      MovieViewHolder viewHolder, Movie movie) {
         RxView.clicks(viewHolder.showComments).subscribe((v) -> {
             fetcher.fetchComments(movie, viewHolder, this);

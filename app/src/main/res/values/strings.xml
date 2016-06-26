@@ -6,8 +6,12 @@
     <string name="vote_average">Vote average:</string>
     <string name="release_date">Release date:</string>
     <string name="lineDescription">This line marks the end of the bloc.</string>
+    <string name="movies.nointernet">Cannot load the movies, please check your internet connection.</string>
     <string name="favoriteButton.notChecked">Mark as \n favorite</string>
     <string name="favoriteButton.checked">Delete from \n favorites</string>
+    <string name="favorite.message.added">Movie added to favorites!</string>
+    <string name="favorite.message.removed">Removed</string>
+    <string name="favorite.message.nointernet">Cannot load the image, please check your internet connection.</string>
 
     <string name="content_authority">com.samutamm.nano.popularmovies</string>
     <string name="show_comments">Show comments</string>

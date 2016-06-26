@@ -1,6 +1,14 @@
 package com.samutamm.nano.popularmovies.helpers;
 
+import android.content.ContentValues;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+
 import com.samutamm.nano.popularmovies.domain.Movie;
+
+import java.io.ByteArrayOutputStream;
+
+import static com.samutamm.nano.popularmovies.data.FavoriteContract.FavoriteEntry.*;
 
 public class Utility {
 
@@ -28,5 +36,24 @@ public class Utility {
             }
         }
         return indexes;
+    }
+
+    public static ContentValues movieToContentValues(Movie movie, MovieViewHolder viewHolder) {
+        byte[] bitmapdata = getImageBytes(viewHolder);
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_MOVIE_ID, movie.getId());
+        values.put(COLUMN_RELEASE_DATE, movie.getReleaseDate());
+        values.put(COLUMN_OVERVIEW, movie.getOverview());
+        values.put(COLUMN_ORIGINAL_TITLE, movie.getOriginalTitle());
+        values.put(COLUMN_AVERAGE_RATE, movie.getVoteAverage());
+        values.put(COLUMN_POSTER, bitmapdata);
+        return values;
+    }
+
+    private static byte[] getImageBytes(MovieViewHolder viewHolder) {
+        Bitmap bitmap = ((BitmapDrawable)viewHolder.thumbnail.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        return stream.toByteArray();
     }
 }
