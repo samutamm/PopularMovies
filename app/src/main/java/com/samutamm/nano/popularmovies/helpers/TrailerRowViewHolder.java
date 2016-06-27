@@ -7,12 +7,14 @@ import android.widget.TextView;
 
 import com.samutamm.nano.popularmovies.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class TrailerRowViewHolder {
-    public ImageView playTrailer;
-    public TextView trailerName;
+    public @BindView(R.id.playTrailer) ImageView playTrailer;
+    public @BindView(R.id.trailerName)TextView trailerName;
 
     public TrailerRowViewHolder(View v) {
-        playTrailer = (ImageView)v.findViewById(R.id.playTrailer);
-        trailerName = (TextView)v.findViewById(R.id.trailerName);
+        ButterKnife.bind(this,v);
     }
 }

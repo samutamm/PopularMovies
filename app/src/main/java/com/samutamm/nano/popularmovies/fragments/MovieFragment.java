@@ -221,6 +221,9 @@ public class MovieFragment extends Fragment implements OnTrailerFetchCompleted, 
 
     @Override
     public void onComments(List<Comment> results, MovieViewHolder holder) {
+        if (results.size()==0) {
+            Toast.makeText(getContext(), "There are no comments!", Toast.LENGTH_SHORT).show();
+        }
         LinearLayout comments = new LinearLayout(getContext());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,

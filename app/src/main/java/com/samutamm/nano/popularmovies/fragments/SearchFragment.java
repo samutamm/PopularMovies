@@ -19,11 +19,15 @@ import com.samutamm.nano.popularmovies.domain.Movie;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class SearchFragment extends Fragment implements AdapterView.OnItemSelectedListener, OnMovieFetchCompleted {
     public final String LOG_TAG = SearchFragment.class.getSimpleName();
 
     private MovieAdapter movieAdapter;
     private List<Movie> movieList;
+    @BindView(R.id.movieRecyclerView) RecyclerView recyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,11 +42,11 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.search_fragment, container, false);
-        RecyclerView recyclerView = (RecyclerView)rootView.findViewById(R.id.movieRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
+        final View view = inflater.inflate(R.layout.search_fragment, container, false);
+        ButterKnife.bind(this, view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(movieAdapter);
-        return rootView;
+        return view;
     }
 
     @Override
@@ -50,9 +54,9 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
         String criteria = (String)parent.getItemAtPosition(i);
         final APIFetcher fetcher = new APIFetcher(getActivity());
         if (criteria.equals(parent.getResources().getString(R.string.criteria_popular))) {
-            fetcher.fetchMovies("popular", this);
+            fetcher.fetchMovies(SearchCriterias.POPULAR, this);
         } else if(criteria.equals(parent.getResources().getString(R.string.criteria_rated))) {
-            fetcher.fetchMovies("top_rated", this);
+            fetcher.fetchMovies(SearchCriterias.TOPRATED, this);
         } else {
             new DatabaseFetcher(getActivity(), this).fetchFavorites();
         }
@@ -68,5 +72,10 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
             movieList.addAll(results);
             movieAdapter.notifyDataSetChanged();
         }
+    }
+
+    private static class SearchCriterias {
+        public static String POPULAR = "popular";
+        public static String TOPRATED = "top_rated";
     }
 }

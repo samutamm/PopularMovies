@@ -5,13 +5,15 @@ import android.widget.TextView;
 
 import com.samutamm.nano.popularmovies.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class CommentRowViewHolder {
-    public TextView author;
-    public TextView content;
+    public @BindView(R.id.commentAuthor) TextView author;
+    public @BindView(R.id.commentContent)  TextView content;
 
     public CommentRowViewHolder(View v) {
-        author = (TextView)v.findViewById(R.id.commentAuthor);
-        content = (TextView)v.findViewById(R.id.commentContent);
+        ButterKnife.bind(this, v);
     }
 
 }

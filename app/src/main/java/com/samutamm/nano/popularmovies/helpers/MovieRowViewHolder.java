@@ -7,16 +7,17 @@ import android.widget.ImageView;
 
 import com.samutamm.nano.popularmovies.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MovieRowViewHolder extends RecyclerView.ViewHolder {
 
-    public ImageView leftImage;
-    public ImageView middleImage;
-    public ImageView rightImage;
+    public @BindView(R.id.left_image)ImageView leftImage;
+    public @BindView(R.id.middle_image)ImageView middleImage;
+    public @BindView(R.id.right_image)ImageView rightImage;
 
     public MovieRowViewHolder(View v) {
         super(v);
-        leftImage = (ImageView) v.findViewById(R.id.left_image);
-        middleImage = (ImageView) v.findViewById(R.id.middle_image);
-        rightImage = (ImageView) v.findViewById(R.id.right_image);
+        ButterKnife.bind(this, v);
     }
 }

@@ -10,7 +10,9 @@ import java.io.ByteArrayOutputStream;
 
 import static com.samutamm.nano.popularmovies.data.FavoriteContract.FavoriteEntry.*;
 
-public class Utility {
+public final class Utility {
+
+    private Utility() {}
 
     public static String getMovieUrl(Movie movie, String size) {
         return "http://image.tmdb.org/t/p/" + size + movie.getPosterPath();
