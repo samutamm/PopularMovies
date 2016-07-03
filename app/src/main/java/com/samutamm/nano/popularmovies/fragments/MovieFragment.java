@@ -54,11 +54,11 @@ public class MovieFragment extends Fragment implements OnTrailerFetchCompleted, 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.movie_fragment, container, false);
-        final MovieViewHolder movieViewHolder = new MovieViewHolder(rootView);
-
         final Bundle args = getArguments();
+        View rootView = null;
         if (args != null) {
+            rootView = inflater.inflate(R.layout.movie_fragment, container, false);
+            final MovieViewHolder movieViewHolder = new MovieViewHolder(rootView);
             Movie movie = (Movie) args.get(MovieActivity.MOVIE_TAG);
             movieViewHolder.originalTitle.setText(movie.getOriginalTitle());
             movieViewHolder.movieYear.setText(Utility.parseYear(movie.getReleaseDate()));
@@ -71,6 +71,8 @@ public class MovieFragment extends Fragment implements OnTrailerFetchCompleted, 
             } else { // shoving favorites, let's not fetch trailers, image,or comments
                 setUpFavoritesView(movieViewHolder, movie);
             }
+        } else {
+            rootView = inflater.inflate(R.layout.no_movie_selected, container, false);
         }
         return rootView;
     }

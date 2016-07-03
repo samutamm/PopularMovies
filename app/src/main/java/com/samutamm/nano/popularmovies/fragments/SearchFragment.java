@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.samutamm.nano.popularmovies.data.DatabaseFetcher;
+import com.samutamm.nano.popularmovies.helpers.RecyclerViewEmptySupport;
 import com.samutamm.nano.popularmovies.interfaces.OnMovieFetchCompleted;
 import com.samutamm.nano.popularmovies.sync.APIFetcher;
 import com.samutamm.nano.popularmovies.adapters.MovieAdapter;
@@ -27,7 +28,7 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
 
     private MovieAdapter movieAdapter;
     private List<Movie> movieList;
-    @BindView(R.id.movieRecyclerView) RecyclerView recyclerView;
+    @BindView(R.id.movieRecyclerView) RecyclerViewEmptySupport recyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
         final View view = inflater.inflate(R.layout.search_fragment, container, false);
         ButterKnife.bind(this, view);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView.setEmptyView(view.findViewById(R.id.no_data));
         recyclerView.setAdapter(movieAdapter);
         return view;
     }
@@ -63,7 +65,8 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {}
+    public void onNothingSelected(AdapterView<?> adapterView) {
+    }
 
     @Override
     public void onFetchCompleted(List<Movie> results) {

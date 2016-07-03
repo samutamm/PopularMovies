@@ -3,6 +3,8 @@ package com.samutamm.nano.popularmovies.activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -25,9 +27,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIm
         if (findViewById(R.id.movie_detail_container) != null) {
             mTwoPane = true;
             if (savedInstanceState == null) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.movie_detail_container, new MovieFragment(), MOVIEFRAGMENT_TAG)
-                        .commit();
+                setEmptyRightPane();
             }
         } else {
             mTwoPane = false;
@@ -41,7 +41,23 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.OnIm
 
         SearchFragment searchFragment = (SearchFragment) getFragmentManager().findFragmentById(R.id.search_fragment);
         searchFragment.setTwoPaneModeToAdapter(mTwoPane);
-        spinner.setOnItemSelectedListener(searchFragment);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int i, long l) {
+                if (mTwoPane) {
+                    setEmptyRightPane();
+                }
+                searchFragment.onItemSelected(parent, view, i, l);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
+    }
+
+    private void setEmptyRightPane() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.movie_detail_container, new MovieFragment(), MOVIEFRAGMENT_TAG)
+                .commit();
     }
 
     @Override

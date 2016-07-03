@@ -23,7 +23,6 @@
                 android:id="@+id/original_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Chappie"
                 android:textSize="30sp"
                 android:textStyle="bold"
                 android:layout_gravity="center_vertical"
@@ -49,7 +48,6 @@
                 <TextView
                     android:id="@+id/movieYear"
                     android:textSize="25sp"
-                    android:text="2015"
                     style="@style/movie_detail"/>
 
                 <!-- This information is not present in json-->
@@ -64,7 +62,6 @@
                     android:id="@+id/averageVote"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:text="8/10"
                     style="@style/movie_detail"/>
 
                 <Button
@@ -81,8 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:layout_marginTop="16dp"
-            android:text="ladl aslkdj adkla akldjad pqwq pr casl pa  lr alfja sojdaspdoajd apd"/>
+            android:layout_marginTop="16dp" />
 
         <View
             android:layout_width="match_parent"
